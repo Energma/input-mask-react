@@ -1,26 +1,14 @@
-import { render, screen, fireEvent } from '@testing-library/react';
-import { MaskedInput } from './mask-input';
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { render, screen, fireEvent } from '@testing-library/react'
+import { MaskedInput } from './mask-input'
+import { describe, it, expect, beforeEach, vi } from 'vitest'
+
+
+
 
 const mockOnChange = vi.fn();
 
 describe('MaskedInput Component - UI', () => {
-  const tests: { name: string; args: any; want: any }[] = [
-    // {
-    // 	name: 'renders with phone number mask',
-    // 	args: {
-    // 		schema: {
-    // 			mask: '+7 (___) ___-__-__',
-    // 			symbol: '_',
-    // 			type: 'numbers'
-    // 		},
-    // 		value: ''
-    // 	},
-    // 	want: {
-    // 		placeholder: '+7 (___) ___-__-__',
-    // 		value: ''
-    // 	}
-    // },
+  const tests: { name: string; args: any; want: any}[] = [
     {
       name: 'renders with pre-filled value',
       args: {
@@ -35,7 +23,6 @@ describe('MaskedInput Component - UI', () => {
         value: '+7 (999) 555-44-33'
       }
     },
-
     {
       name: 'renders with custom className',
       args: {
@@ -56,10 +43,10 @@ describe('MaskedInput Component - UI', () => {
     vi.clearAllMocks();
   });
 
-  tests.forEach(({ name, args, want }) => {
+  tests.forEach(({name, args, want }) => {
     it(name, () => {
       render(<MaskedInput {...args} onChange={mockOnChange} data-testid="masked-input" />);
-      const input = screen.getByTestId('masked-input');
+      const input = screen.getByTestId('masked-input') as HTMLInputElement;
 
       if (want.placeholder) {
         expect(input.getAttribute('placeholder')).toBe(want.placeholder);
@@ -157,7 +144,7 @@ describe('MaskedInput Component - Functionality', () => {
   functionalityTests.forEach(({ name, args, want }) => {
     it(name, () => {
       render(<MaskedInput {...args} onChange={mockOnChange} data-testid="masked-input" />);
-      const input = screen.getByTestId('masked-input');
+      const input = screen.getByTestId('masked-input') as HTMLInputElement;
 
       if (args.input) {
         fireEvent.change(input, { target: { value: args.input } });
@@ -234,7 +221,7 @@ describe('MaskedInput Component - Edge Cases', () => {
   edgeCases.forEach(({ name, args, want }) => {
     it(name, () => {
       render(<MaskedInput {...args} onChange={mockOnChange} data-testid="masked-input" />);
-      const input = screen.getByTestId('masked-input');
+      const input = screen.getByTestId('masked-input') as HTMLInputElement;
       expect(input.value).toBe(want.value);
     });
   });

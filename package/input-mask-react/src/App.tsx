@@ -22,6 +22,8 @@ function App() {
         value={value}
         onChange={(e) => setValue(e.target.value)}
         placeholder="Enter value..."
+        data-testid="masked-input"
+        className='masked-input'
       />
       <p>Current Value: {value}</p>
     </div>
