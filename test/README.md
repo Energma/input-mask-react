@@ -1,3 +1,11 @@
+<OVO LAKI POSLE IZBRISHI>
+
+Ovde u test treba da dodamo minimalni package.json i jos sta treba da tu bude setup za mini testiranje liba.
+Unutar tog package.json ces dodati url liba i tako ga pozivati, ili lokalan link ili samo referenciraj.
+
+
+
+
 # Input Mask React
 
 `input-mask-react` is a React component for creating input fields with customizable input masks. It allows you to format user input according to a specified mask, handling dynamic cursor positions and formatting on-the-fly. This component supports various types of input masks such as numbers, letters, and mixed formats.
@@ -26,3 +34,36 @@ npm install input-mask-react
 pnpm add input-mask-react
 ```
 
+## Usage
+```
+import React, { useState } from "react";
+import { MaskedInput, Schema } from "input-mask-react";
+
+const App = () => {
+  const [value, setValue] = useState("");
+
+  const schema: Schema = {
+    mask: "(XXX) XXX-XXXX", // Define the input mask pattern
+    symbol: "_",             // Define the symbol to replace with input (e.g., _ or any other character)
+    type: "numbers",         // Optional: define input type (numbers, letters, or mixed)
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setValue(e.target.value);
+  };
+
+  return (
+    <div>
+      <h1>Input Mask Example</h1>
+      <MaskedInput
+        schema={schema}
+        value={value}
+        onChange={handleChange}
+        placeholder="(XXX) XXX-XXXX"
+      />
+    </div>
+  );
+};
+
+export default App;
+```

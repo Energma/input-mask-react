@@ -1,4 +1,4 @@
-import { Schema } from "../components/mask-input";
+import { Schema } from "../mask-input";
 
 export const createCursorManager = (mask: string, symbol: string) => {
     const findNextInputPosition = (currentPos: number): number => {

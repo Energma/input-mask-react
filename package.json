@@ -1,0 +1,15 @@
+{
+  "name": "@energma/workspace",
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "cd ./test && pnpm dev",
+    "test-watch": true,
+    "test": true,
+    "build": true,
+    "run-tests": true,
+    "build-package": true,
+    "publish-package": true,
+    "clean-all": "find . -name 'node_modules' -type d -prune -exec rm -rf '{}' +; find . -name '.next' -type d -prune -exec rm -rf '{}' +"
+  }
+}
