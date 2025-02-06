@@ -10,16 +10,15 @@ export default defineConfig({
     react(),
     dts({
       insertTypesEntry: true,
-      outDir: "./dist"
+      outDir: "dist",
     })
-
   ],
   build: {
+    outDir: "dist",
     lib: {
       entry: path.resolve(__dirname, "./index.tsx"),
       name: "@energma/input-mask-react", 
       formats: ["es", "umd"], 
-
       fileName: (format) => `input-mask-react.${format}.js`,
     },
     rollupOptions: {

@@ -2,6 +2,7 @@
   "compilerOptions": {
     "target": "ESNext",
     "useDefineForClassFields": true,
+    "declaration": true,
     "lib": ["DOM", "DOM.Iterable", "ESNext"],
     "allowJs": false,
     "skipLibCheck": true,
@@ -16,6 +17,7 @@
     "noEmit": true,
     "jsx": "react-jsx"
   },
-  "include": ["src"],
+  "include": ["src", "index.tsx"],
+  "exclude": ["src/mask-input.test.tsx", "src/util/cursor-manager.test.ts"]
   //"references": [{ "path": "./tsconfig.node.json" }]
 }

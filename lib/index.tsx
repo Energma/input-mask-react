@@ -1,7 +1,1 @@
-import { Schema, MaskedInput } from "./src/mask-input";
-
-export {
-    MaskedInput
-};
-export type { Schema };
-
+export { MaskedInput, type Schema } from "./src/mask-input";
