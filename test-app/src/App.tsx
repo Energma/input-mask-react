@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import './App.css'
-import { MaskedInput } from "@energma/input-mask-react"
+import './App.css';
+import { MaskedInput } from "@energma/input-mask-react";
 
 
 function App() {
@@ -24,14 +24,14 @@ function App() {
        <div style={{ padding: '20px', fontFamily: 'Arial, sans-serif' }}>
       <h1>Masked Input Example</h1>
       <p>Enter a value in the input field below:</p>
-      <MaskedInput
+       <MaskedInput
         schema={schema}
         value={value}
         onChange={(e: any) => setValue(e.target.value)}
         placeholder="Enter value..."
         data-testid="masked-input"
         className='masked-input'
-      />
+      /> 
       <p>Current Value: {value}</p> 
       </div>
     </>
