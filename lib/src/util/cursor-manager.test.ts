@@ -92,13 +92,13 @@ describe('createCursorManager', () => {
       let result;
       switch (args.method) {
         case 'findNextInputPosition':
-          result = cursorManager.findNextInputPosition(args.currentPos);
+          result = cursorManager.findNextInputPosition(args.currentPos ?? 0);
           break;
         case 'findPreviousInputPosition':
-          result = cursorManager.findPreviousInputPosition(args.currentPos);
+          result = cursorManager.findPreviousInputPosition(args.currentPos ?? 0);
           break;
         case 'calculateCursorPosition':
-          result = cursorManager.calculateCursorPosition(args.cursorPos, args.lastFilledPosition, args.formatted);
+          result = cursorManager.calculateCursorPosition(args.cursorPos ?? 0, args.lastFilledPosition ?? 0, args.formatted ?? "");
           break;
       }
 
@@ -178,16 +178,16 @@ describe('createCursorManager', () => {
         let result;
         switch (operation.method) {
           case 'findNextInputPosition':
-            result = cursorManager.findNextInputPosition(operation.currentPos);
+            result = cursorManager.findNextInputPosition(operation.currentPos ?? 0);
             break;
           case 'findPreviousInputPosition':
-            result = cursorManager.findPreviousInputPosition(operation.currentPos);
+            result = cursorManager.findPreviousInputPosition(operation.currentPos ?? 0);
             break;
           case 'calculateCursorPosition':
             result = cursorManager.calculateCursorPosition(
-              operation.cursorPos,
-              operation.lastFilledPosition,
-              operation.formatted
+              operation.cursorPos ?? 0,
+              operation.lastFilledPosition ?? 0,
+              operation.formatted ?? ""
             );
             break;
         }

@@ -1,6 +1,7 @@
 import { render, screen, fireEvent } from '@testing-library/react'
-import { MaskedInput } from './mask-input'
+import React from 'react';
 import { describe, it, expect, beforeEach, vi } from 'vitest'
+import  { MaskedInput }  from './mask-input'
 
 
 
