@@ -1,10 +1,12 @@
 # Input Mask React
 
-## (Compatibility)
+`input-mask-react` is a React component for creating input fields with customizable input masks. It allows you to format user input according to a specified mask, handling dynamic cursor positions and formatting on-the-fly. This component supports various types of input masks such as numbers, letters, and mixed formats.
+
+
+# (Compatibility)
 - **React 19+**
 - **NEXT 15+**
 
-`input-mask-react` is a React component for creating input fields with customizable input masks. It allows you to format user input according to a specified mask, handling dynamic cursor positions and formatting on-the-fly. This component supports various types of input masks such as numbers, letters, and mixed formats.
 
 # Repository
  
