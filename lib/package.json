@@ -9,7 +9,6 @@
     "url": "https://github.com/lilic14991/input-mask-react"
   },
   "scripts": {
-    "dev": "vite",
     "test": "vitest --watch",
     "build": "tsc -b && vite build",
     "lint": "eslint .",

@@ -3,9 +3,6 @@ import React from 'react';
 import { describe, it, expect, beforeEach, vi } from 'vitest'
 import  { MaskedInput }  from './mask-input'
 
-
-
-
 const mockOnChange = vi.fn();
 
 describe('MaskedInput Component - UI', () => {
