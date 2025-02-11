@@ -31,7 +31,7 @@ export const createCursorManager = (mask: string, symbol: string) => {
     };
 };
 
-export const cleanValue = (input: string, type: Schema['type'] = 'numbers'): string => {
+export const cleanValue = (input: string, type: Schema['type']): string => {
     switch(type) {
         case 'numbers':
             return input.replace(/[^\d]/g, '');
@@ -40,5 +40,6 @@ export const cleanValue = (input: string, type: Schema['type'] = 'numbers'): str
         case 'mixed':
         default:
             return input.replace(/[^a-zA-Z0-9]/g, '');
+            
     }
 };

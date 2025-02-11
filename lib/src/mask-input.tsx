@@ -1,5 +1,6 @@
 import React, { forwardRef, useMemo, useRef, useState } from 'react';
 import { createCursorManager, cleanValue } from "./util/util"
+import { format } from 'path';
 
 export interface Schema {
     mask: string;
@@ -22,7 +23,7 @@ export const MaskedInput = forwardRef<HTMLInputElement, MaskedInputProps>(
         const formatValue = (input: string = '', cursorPos: number = 0): {formatted: string; newCursorPos: number} => {
             if (!schema.mask) return {formatted: '', newCursorPos: 0};
 
-            const cleanedInput = cleanValue(input);
+            const cleanedInput = cleanValue(input, schema.type);
             let formatted = ''
             let inputIndex = 0;
             let newCursorPos = cursorPos;
@@ -38,15 +39,36 @@ export const MaskedInput = forwardRef<HTMLInputElement, MaskedInputProps>(
                     }
                 } else {
                     // Pick the input value and move cursor
-                    if (inputIndex < cleanedInput.length && /\d/.test(cleanedInput[inputIndex])) {
-                        formatted += cleanedInput[inputIndex];
-                        inputIndex++;
-                        // Cursor position - while replacing the symbol with the value
-                        if (i < cursorPos ) {
-                            lastFilledPosition = i;
+                    // if (inputIndex < cleanedInput.length && /\d/.test(cleanedInput[inputIndex])) {
+                    //     formatted += cleanedInput[inputIndex];
+                    //     inputIndex++;
+                    //     // Cursor position - while replacing the symbol with the value
+                    //     if (i < cursorPos ) {
+                    //         lastFilledPosition = i;
+                    //     }
+                    // } else {
+                    //     formatted += schema.symbol
+                    // }
+                     // Pick the input value and move cursor
+                    if (inputIndex < cleanedInput.length) {
+                        const currentChar = cleanedInput[inputIndex];
+
+                        // Ensure the character is valid based on schema type
+                        const isValidChar = 
+                            (schema.type === 'numbers' && /\d/.test(currentChar)) || 
+                            (schema.type === 'letters' && /[a-zA-Z]/.test(currentChar)) ||
+                            (schema.type === 'mixed' && /[a-zA-Z0-9]/.test(currentChar));
+
+                        if (isValidChar == true) {
+                            formatted += currentChar;
+                            inputIndex++;
+                            // Cursor position - while replacing the symbol with the value
+                            if (i < cursorPos ) {
+                                lastFilledPosition = i;
+                            }
+                        } else {
+                            formatted += schema.symbol
                         }
-                    } else {
-                        formatted += schema.symbol
                     }
                 }
             }
@@ -59,8 +81,8 @@ export const MaskedInput = forwardRef<HTMLInputElement, MaskedInputProps>(
             const inputElement = e.target;
             const inputValue = inputElement.value;
             const newCursorPosition = inputElement.selectionStart || 0;
-            const prevDigits = cleanValue(displayValue);
-            const newDigits = cleanValue(inputValue);
+            const prevDigits = cleanValue(displayValue, schema.type);
+            const newDigits = cleanValue(inputValue, schema.type);
 
             const currentPos = cursorManager.findPreviousInputPosition(newCursorPosition);
             const { formatted, newCursorPos} = formatValue(newDigits, currentPos);
