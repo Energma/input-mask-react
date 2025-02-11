@@ -38,17 +38,6 @@ export const MaskedInput = forwardRef<HTMLInputElement, MaskedInputProps>(
                         newCursorPos++;
                     }
                 } else {
-                    // Pick the input value and move cursor
-                    // if (inputIndex < cleanedInput.length && /\d/.test(cleanedInput[inputIndex])) {
-                    //     formatted += cleanedInput[inputIndex];
-                    //     inputIndex++;
-                    //     // Cursor position - while replacing the symbol with the value
-                    //     if (i < cursorPos ) {
-                    //         lastFilledPosition = i;
-                    //     }
-                    // } else {
-                    //     formatted += schema.symbol
-                    // }
                      // Pick the input value and move cursor
                     if (inputIndex < cleanedInput.length) {
                         const currentChar = cleanedInput[inputIndex];
