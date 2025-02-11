@@ -40,3 +40,44 @@
 .read-the-docs {
   color: #888;
 }
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 10px;
+  width: 100%;
+}
+
+.input-wrapper {
+  padding: 10px 0  0 10px;
+}
+
+.masked-input {
+  text-transform: uppercase;
+}
+
+.masked-input-czipcode {
+  margin-left: 73px;
+  text-transform: uppercase;
+}
+
+.masked-input-credit-card {
+  margin-left: 67px;
+  text-transform: uppercase;
+}
+
+.masked-input-telephone {
+  margin-left: 139px;
+  text-transform: uppercase;
+}
+
+.masked-input-zipcode {
+  margin-left: 150px;
+  text-transform: uppercase;
+}
+
+.masked-input-licence {
+  margin-left: 103px;
+  text-transform: uppercase;
+}
+
