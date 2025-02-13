@@ -1,6 +1,5 @@
 import React, { forwardRef, useMemo, useRef, useState } from 'react';
 import { createCursorManager, cleanValue } from "./util/util"
-import { format } from 'path';
 
 export interface Schema {
     mask: string;
