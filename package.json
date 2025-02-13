@@ -4,9 +4,9 @@
   "type": "module",
   "scripts": {
     "dev": "pnpm --filter test-app dev",
-    "test-watch": "pnpm --filter ./lib test",
-    "test": true,
-    "build": "pnpm --filter ./lib build",
+    "test-watch": "pnpm --filter input-mask-react test-watch",
+    "test": "pnpm --filter input-mask-react test",
+    "build": "pnpm --filter input-mask-react build",
     "run-tests": "pnpm test",
     "build-package": true,
     "publish-package": true,

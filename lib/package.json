@@ -2,14 +2,9 @@
   "name": "@energma/input-mask-react",
   "version": "1.0.0",
   "type": "module",
-  "main": "./dist/input-mask-react.umd.js",
-  "module": "./dist/input-mask-react.es.js",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/lilic14991/input-mask-react"
-  },
   "scripts": {
-    "test": "vitest --watch",
+    "test": "vitest",
+    "test-watch": "vitest --watch",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview"
@@ -41,6 +36,12 @@
   "files": [
     "dist"
   ],
+  "main": "./dist/input-mask-react.umd.js",
+  "module": "./dist/input-mask-react.es.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lilic14991/input-mask-react"
+  },
   "publishConfig": {
     "registry": "https://npm.pkg.github.com"
   }
