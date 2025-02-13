@@ -75,13 +75,13 @@ function App() {
     },
     {
       id: "country-code",
-      label: "Vehicle Licence:",
+      label: "Country Code:",
       schema: {
         mask: "XXX",
         symbol: "X",
         type: "letters",
       },
-      className: "masked-input-licence",
+      className: "masked-input-country",
       value: values.countryCode,
       onChange: (e: any) => setValues({...values, countryCode: e.target.value})
     }

@@ -16,6 +16,7 @@
     "test": "pnpm --filter input-mask-react test",
     "build": "pnpm --filter input-mask-react build",
     "run-tests": "pnpm test",
+    "preinstall": "echo 'Using .npmrc settings'",
     "build-package": true,
     "publish-package": true,
     "clean-all": "find . -name 'node_modules' -type d -prune -exec rm -rf '{}' +; find . -name 'dist' -type d -prune -exec rm -rf '{}' +"
