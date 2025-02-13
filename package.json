@@ -1,6 +1,6 @@
 {
   "name": "@energma/workspace",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "type": "module",
   "pnpm": {
       "onlyBuiltDependencies": ["esbuild"]
@@ -14,5 +14,10 @@
     "build-package": true,
     "publish-package": true,
     "clean-all": "find . -name 'node_modules' -type d -prune -exec rm -rf '{}' +; find . -name 'dist' -type d -prune -exec rm -rf '{}' +"
+  },
+  "engines": {
+    "node": ">=20.17.0",
+    "npm": ">=11.1.0",
+    "pnpm:": ">=10.0.0"
   }
 }
