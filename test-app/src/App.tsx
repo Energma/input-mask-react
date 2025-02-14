@@ -2,7 +2,6 @@ import { useState } from 'react';
 import './App.css';
 import { MaskedInput } from "@energma/input-mask-react";
 
-
 function App() {
 
   const [value, setValue] = useState('');

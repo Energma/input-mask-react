@@ -2,6 +2,9 @@
   "name": "@energma/workspace",
   "version": "0.0.0",
   "type": "module",
+  "pnpm": {
+      "onlyBuiltDependencies": ["esbuild"]
+  },
   "scripts": {
     "dev": "pnpm --filter test-app dev",
     "test-watch": "pnpm --filter input-mask-react test-watch",
