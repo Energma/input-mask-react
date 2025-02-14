@@ -19,5 +19,4 @@
   },
   "include": ["src", "index.tsx"],
   "exclude": ["src/mask-input.test.tsx", "src/util/cursor-manager.test.ts"]
-  //"references": [{ "path": "./tsconfig.node.json" }]
 }
