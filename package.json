@@ -11,7 +11,7 @@
     "pnpm:": ">=10.0.0"
   },
   "scripts": {
-    "dev": "pnpm --filter test-app dev",
+    "dev": "pnpm build && pnpm --filter test-app dev",
     "test-watch": "pnpm --filter input-mask-react test-watch",
     "test": "pnpm --filter input-mask-react test",
     "build": "pnpm --filter input-mask-react build",
