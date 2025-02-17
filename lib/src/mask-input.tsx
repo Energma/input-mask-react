@@ -39,6 +39,9 @@ export const MaskedInput = forwardRef<HTMLInputElement, MaskedInputProps>(
         // Append rest of the mask
         if (isMaskChar) {
           formatted += schema.mask[i];
+          if (formatted.indexOf("/") === -1) {
+            newCursorPos--;
+          }
           if (i < cursorPos) {
             newCursorPos++;
           }
@@ -98,14 +101,34 @@ export const MaskedInput = forwardRef<HTMLInputElement, MaskedInputProps>(
       });
     };
 
-    const hadnleKeyUp = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
       if (e.key === "Backspace") {
-        const curPos = inputRef.current?.selectionStart || 0;
-        const newPos = cursorManager.findPreviousInputPosition(curPos);
+        e.preventDefault();
+        if (!inputRef.current) return;
 
+        let curPos = inputRef.current.selectionStart || 0;
+        if (curPos === 0) return; // Prevent breaking at start
+
+        let valueArray = displayValue.split("");
+
+        // If cursor is after a mask, skip the mask and move to the previous input position
+        if (schema.mask[curPos - 1] !== schema.symbol) {
+          curPos = cursorManager.findPreviousInputPosition(curPos); // Skip over mask and move to symbol
+        }
+
+        // Delete one input character (symbol) at the current position
+        if (curPos > 0 && valueArray[curPos] !== schema.symbol) {
+          console.log(valueArray[curPos], "vCurPos");
+          valueArray[curPos - 1] = schema.symbol; // Replace the input character with the mask (symbol)
+        }
+
+        console.log(valueArray);
+        setDisplayValue(valueArray.join(""));
+        // Adjust cursor position after deletion
         requestAnimationFrame(() => {
           if (inputRef.current) {
-            inputRef.current.setSelectionRange(newPos, newPos);
+            // Move cursor to the previous valid input position
+            inputRef.current.setSelectionRange(curPos, curPos);
           }
         });
       }
@@ -165,7 +188,7 @@ export const MaskedInput = forwardRef<HTMLInputElement, MaskedInputProps>(
         }}
         value={displayValue}
         onChange={handleChange}
-        onKeyUp={hadnleKeyUp}
+        onKeyUp={handleKeyDown}
         onFocus={handleFocus}
         onBlur={handleBlur}
         placeholder={placeholder}
