@@ -1,5 +1,5 @@
 import React, { forwardRef, useMemo, useRef, useState } from "react";
-import { createCursorManager, cleanValue } from "./util/util";
+import { createCursorManager, cleanValue, isValidChar } from "./util/util";
 
 export interface Schema {
   mask: string;
@@ -23,75 +23,80 @@ export const MaskedInput = forwardRef<HTMLInputElement, MaskedInputProps>(
     );
 
     const formatValue = (
-      input: string = "",
+      input: string = schema.mask,
       cursorPos: number = 0
     ): { formatted: string; newCursorPos: number } => {
       if (!schema.mask) return { formatted: "", newCursorPos: 0 };
 
-      const cleanedInput = cleanValue(input, schema.type);
-      let formatted = "";
-      let inputIndex = 0;
+      // main logic
+      const maskArray = schema.mask.split("");
+      const inputArray = input.split("");
       let newCursorPos = cursorPos;
-      let lastFilledPosition = -1;
 
-      for (let i = 0; i < schema.mask.length; i++) {
-        const isMaskChar = schema.mask[i] !== schema.symbol;
-        // Append rest of the mask
-        if (isMaskChar) {
-          formatted += schema.mask[i];
-          if (formatted.indexOf("/") === -1) {
-            newCursorPos--;
-          }
-          if (i < cursorPos) {
-            newCursorPos++;
-          }
-        } else {
-          const currentChar = cleanedInput[inputIndex];
+      // if input is empty, return empty mask
+      if (!input) {
+        return { formatted: schema.mask, newCursorPos: 0 };
+      }
 
-          // Ensure the character is valid based on schema type
-          const isValidChar =
-            (schema.type === "numbers" && /\d/.test(currentChar)) ||
-            (schema.type === "letters" && /[a-zA-Z]/.test(currentChar)) ||
-            (schema.type === "mixed" && /[a-zA-Z0-9]/.test(currentChar));
-
-          // Pick the input value and move cursor
-          // Pick the input value and move cursor
-          if (inputIndex < cleanedInput.length && isValidChar) {
-            formatted += cleanedInput[inputIndex];
-            inputIndex++;
-            // Cursor position - while replacing the symbol with the input value
-            if (i < cursorPos) {
-              lastFilledPosition = i;
-            }
-          } else {
-            formatted += schema.symbol;
-          }
+      // Preserve existing valid input
+      for (let i = 0; i < maskArray.length; i++) {
+        if (
+          maskArray[i] === schema.symbol &&
+          displayValue[i] &&
+          displayValue[i] !== schema.symbol
+        ) {
+          maskArray[i] = displayValue[i];
         }
       }
 
-      newCursorPos = cursorManager.calculateCursorPosition(
-        cursorPos,
-        lastFilledPosition,
-        formatted
-      );
-      return { formatted, newCursorPos };
+      console.log("displayValue", displayValue);
+
+      // Handle new input
+      if (cursorPos > 0) {
+        const targetPos = cursorPos - 1;
+        const newChar = inputArray[targetPos];
+
+        // Check is mask on target position a symbol
+        if (schema.mask[targetPos] === schema.symbol) {
+          // Check is input valid type
+          if (isValidChar(newChar, schema.type)) {
+            maskArray[targetPos] = newChar;
+            // Find next symbol position
+            newCursorPos = maskArray.findIndex(
+              (char, idx) => idx > targetPos && char === schema.symbol
+            );
+            if (newCursorPos === -1) newCursorPos = cursorPos;
+          } else {
+            // Invalid character - stay at current position
+            newCursorPos = targetPos;
+          }
+        } else {
+          // At fixed mask character - find next symbol position
+          newCursorPos = maskArray.findIndex(
+            (char, idx) => idx >= cursorPos && char === schema.symbol
+          );
+          if (newCursorPos === -1) newCursorPos = cursorPos;
+        }
+      }
+      return { formatted: maskArray.join(""), newCursorPos };
     };
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+      e.stopPropagation();
       const inputElement = e.target;
       const inputValue = inputElement.value;
       const newCursorPosition = inputElement.selectionStart || 0;
-      const prevDigits = cleanValue(displayValue, schema.type);
-      const newDigits = cleanValue(inputValue, schema.type);
 
-      const currentPos =
-        cursorManager.findPreviousInputPosition(newCursorPosition);
-      const { formatted, newCursorPos } = formatValue(newDigits, currentPos);
-
+      const { formatted, newCursorPos } = formatValue(
+        inputValue,
+        newCursorPosition
+      );
       setDisplayValue(formatted);
+
+      // Trigger onChange with the formatted value
       onChange?.({
         ...e,
-        target: { ...e.target, value: newDigits },
+        target: { ...e.target, value: formatted },
       });
 
       requestAnimationFrame(() => {
@@ -101,36 +106,82 @@ export const MaskedInput = forwardRef<HTMLInputElement, MaskedInputProps>(
       });
     };
 
-    const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    const handleKeyUp = (e: React.KeyboardEvent<HTMLInputElement>) => {
+      const curPos = inputRef.current?.selectionStart || 0;
+      const maskArray = displayValue.split("");
+
       if (e.key === "Backspace") {
+        // handle backspace at the end of input
         e.preventDefault();
         if (!inputRef.current) return;
 
-        let curPos = inputRef.current.selectionStart || 0;
-        if (curPos === 0) return; // Prevent breaking at start
+        console.log("curPos:", curPos);
+        console.log("displayValue: ", displayValue);
+        console.log("displayValue length: ", displayValue.length);
 
-        let valueArray = displayValue.split("");
-
-        // If cursor is after a mask, skip the mask and move to the previous input position
-        if (schema.mask[curPos - 1] !== schema.symbol) {
-          curPos = cursorManager.findPreviousInputPosition(curPos); // Skip over mask and move to symbol
-        }
-
-        // Delete one input character (symbol) at the current position
-        if (curPos > 0 && valueArray[curPos] !== schema.symbol) {
-          console.log(valueArray[curPos], "vCurPos");
-          valueArray[curPos - 1] = schema.symbol; // Replace the input character with the mask (symbol)
-        }
-
-        console.log(valueArray);
-        setDisplayValue(valueArray.join(""));
-        // Adjust cursor position after deletion
-        requestAnimationFrame(() => {
-          if (inputRef.current) {
-            // Move cursor to the previous valid input position
-            inputRef.current.setSelectionRange(curPos, curPos);
+        if (
+          curPos + 1 === displayValue.length &&
+          displayValue.indexOf(schema.symbol) === -1
+        ) {
+          const lastPos = displayValue.length - 1;
+          if (displayValue[lastPos] !== schema.symbol) {
+            maskArray[lastPos] = schema.symbol;
+            setDisplayValue(maskArray.join(""));
+            requestAnimationFrame(() => {
+              if (inputRef.current) {
+                inputRef.current.setSelectionRange(lastPos, lastPos);
+              }
+            });
           }
-        });
+          return;
+        }
+        // handle first charater in input (backaspace)
+        if (curPos <= 1) {
+          console.log("AAAA");
+          if (displayValue[0] !== schema.symbol) {
+            maskArray[0] = schema.symbol;
+            setDisplayValue(maskArray.join(""));
+            requestAnimationFrame(() => {
+              if (inputRef.current) {
+                inputRef.current.setSelectionRange(0, 0);
+              }
+            });
+          }
+          return;
+        }
+
+        // Normal backspace behavior - clear current position and move cursor back
+        const previousPos = curPos - 1;
+        if (previousPos >= 0 && schema.mask[previousPos] === schema.symbol) {
+          maskArray[previousPos] = schema.symbol;
+          setDisplayValue(maskArray.join(""));
+          requestAnimationFrame(() => {
+            inputRef.current?.setSelectionRange(previousPos, previousPos);
+          });
+        } else if (previousPos >= 0) {
+          // if we're at at fixed mask character, find previous input position
+          let prevEditablePos = previousPos;
+          // skip the static mask character
+          while (
+            prevEditablePos >= 0 &&
+            schema.mask[prevEditablePos] !== schema.symbol
+          ) {
+            prevEditablePos--;
+          }
+
+          if (prevEditablePos >= 0) {
+            maskArray[prevEditablePos] = schema.symbol;
+            setDisplayValue(maskArray.join(""));
+            requestAnimationFrame(() => {
+              if (inputRef.current) {
+                inputRef.current.setSelectionRange(
+                  prevEditablePos,
+                  prevEditablePos
+                );
+              }
+            });
+          }
+        }
       }
     };
 
@@ -188,7 +239,7 @@ export const MaskedInput = forwardRef<HTMLInputElement, MaskedInputProps>(
         }}
         value={displayValue}
         onChange={handleChange}
-        onKeyUp={handleKeyDown}
+        onKeyUp={handleKeyUp}
         onFocus={handleFocus}
         onBlur={handleBlur}
         placeholder={placeholder}
