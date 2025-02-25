@@ -20,6 +20,10 @@ function App() {
     value: string;
     onChange: (e: any) => void;
   }[] = [
+    countryCode: ""
+  });
+
+  const schemas: {id: string, label: string, schema: Schema, className: string, value: string, onChange: (e: any) => void}[] = [
     {
       id: "credit-card-expiration",
       label: "Credit Card Expiration Month:",
@@ -30,6 +34,7 @@ function App() {
       },
       className: "masked-input",
       value: values.creditCardExpiration,
+
       onChange: (e: any) =>
         setValues({ ...values, creditCardExpiration: e.target.value }),
     },
@@ -44,6 +49,7 @@ function App() {
       className: "masked-input-zipcode",
       value: values.zipCode,
       onChange: (e: any) => setValues({ ...values, zipCode: e.target.value }),
+
     },
     {
       id: "canadian-zip-code",
@@ -55,6 +61,7 @@ function App() {
       },
       className: "masked-input-czipcode",
       value: values.canadianZipCode,
+
       onChange: (e: any) =>
         setValues({ ...values, canadianZipCode: e.target.value }),
     },
@@ -69,6 +76,7 @@ function App() {
       className: "masked-input-telephone",
       value: values.telephone,
       onChange: (e: any) => setValues({ ...values, telephone: e.target.value }),
+
     },
     {
       id: "credit-card-number",
@@ -82,6 +90,7 @@ function App() {
       value: values.creditCardNumber,
       onChange: (e: any) =>
         setValues({ ...values, creditCardNumber: e.target.value }),
+
     },
     {
       id: "country-code",
@@ -96,6 +105,7 @@ function App() {
       onChange: (e: any) =>
         setValues({ ...values, countryCode: e.target.value }),
     },
+
   ];
 
   return (

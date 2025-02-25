@@ -2,6 +2,8 @@ import React, { forwardRef, useMemo, useRef, useState } from "react";
 import { isValidChar } from "./util/util";
 import useStaticMaskIndexes from "./util/hook/useStaticMaskIndexes";
 
+
+
 export interface Schema {
   mask: string;
   symbol: string;
@@ -25,7 +27,7 @@ export const MaskedInput = forwardRef<HTMLInputElement, MaskedInputProps>(
     const isBackspaceHeldRef = useRef<boolean>(false);
     const staticMaskIndexes = useStaticMaskIndexes(schema.mask, schema.symbol);
 
-    const formatValue = (
+     const formatValue = (
       input: string = schema.mask,
       cursorPos: number = 0
     ): { formatted: string; newCursorPos: number } => {
@@ -82,7 +84,7 @@ export const MaskedInput = forwardRef<HTMLInputElement, MaskedInputProps>(
       return { formatted: maskArray.join(""), newCursorPos };
     };
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       e.stopPropagation();
       const inputElement = e.target;
       const inputValue = inputElement.value;
@@ -106,6 +108,7 @@ export const MaskedInput = forwardRef<HTMLInputElement, MaskedInputProps>(
         }
       });
     };
+
 
     const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
       if (e.key === "Backspace" && !backspaceInterval) {
@@ -221,8 +224,7 @@ export const MaskedInput = forwardRef<HTMLInputElement, MaskedInputProps>(
             }
           }
         }
-      }
-    };
+
 
     const handleFocus = (e: React.FocusEvent<HTMLInputElement>) => {
       e.stopPropagation();
@@ -250,7 +252,7 @@ export const MaskedInput = forwardRef<HTMLInputElement, MaskedInputProps>(
       }, 0);
     };
 
-    const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+   const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
       e.stopPropagation();
       setIsFocused(false);
       // Clear mask if no valid input
