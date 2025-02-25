@@ -25,8 +25,6 @@ export const MaskedInput = forwardRef<HTMLInputElement, MaskedInputProps>(
     const isBackspaceHeldRef = useRef<boolean>(false);
     const staticMaskIndexes = useStaticMaskIndexes(schema.mask, schema.symbol);
 
-    console.log(staticMaskIndexes);
-
     const formatValue = (
       input: string = schema.mask,
       cursorPos: number = 0
@@ -53,8 +51,6 @@ export const MaskedInput = forwardRef<HTMLInputElement, MaskedInputProps>(
           maskArray[i] = displayValue[i];
         }
       }
-
-      console.log("displayValue", displayValue);
 
       // Handle new input
       if (cursorPos > 0) {
@@ -115,15 +111,24 @@ export const MaskedInput = forwardRef<HTMLInputElement, MaskedInputProps>(
       if (e.key === "Backspace" && !backspaceInterval) {
         setIsBackspaceHeld(true); // Indicate Backspace is held
         isBackspaceHeldRef.current = true; // prevent async state delay
-        const curPos = inputRef.current?.selectionStart || 0;
         backspaceInterval = setInterval(() => {
           setDisplayValue((prev) => {
-            if (prev[0] === schema.symbol) {
+            let cursorPosition = inputRef.current?.selectionStart || 0;
+            if (prev === schema.mask) {
               clearInterval(backspaceInterval!);
               backspaceInterval = null;
               return schema.mask;
+            }
+            if (
+              staticMaskIndexes.includes(cursorPosition - 1) &&
+              schema.mask[cursorPosition]
+            ) {
+              // If previous character is static, move cursor back again
+              cursorPosition--;
+              return prev.slice(0, -cursorPosition);
             } else {
-              return prev.slice(0, -1); // Remove last character continuously
+              // Normal deletion logic
+              return prev.slice(0, -1);
             }
           });
         }, backspaceHoldInterval);
@@ -167,12 +172,16 @@ export const MaskedInput = forwardRef<HTMLInputElement, MaskedInputProps>(
 
           // handle first charater in input (backaspace)
           if (curPos <= 1) {
+            // handle static mask on first position
+            if (curPos === 0 && staticMaskIndexes.includes(0)) {
+              return;
+            }
             if (displayValue[0] !== schema.symbol) {
               maskArray[0] = schema.symbol;
               setDisplayValue(maskArray.join(""));
               requestAnimationFrame(() => {
                 if (inputRef.current) {
-                  inputRef.current.setSelectionRange(0, 0);
+                  inputRef.current.setSelectionRange(curPos, curPos);
                 }
               });
             }
@@ -253,7 +262,6 @@ export const MaskedInput = forwardRef<HTMLInputElement, MaskedInputProps>(
     // Update display value when value changes
     React.useEffect(() => {
       const { formatted } = formatValue(value);
-
       if (!value) {
         setDisplayValue("");
       } else {
