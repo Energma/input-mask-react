@@ -1,5 +1,6 @@
 import React, { forwardRef, useMemo, useRef, useState } from "react";
-import { createCursorManager, cleanValue, isValidChar } from "./util/util";
+import { isValidChar } from "./util/util";
+import useStaticMaskIndexes from "./util/hook/useStaticMaskIndexes";
 
 export interface Schema {
   mask: string;
@@ -12,15 +13,19 @@ interface MaskedInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   value?: string;
 }
 
+const backspaceHoldInterval = 100;
+let backspaceInterval: NodeJS.Timeout | null = null;
+
 export const MaskedInput = forwardRef<HTMLInputElement, MaskedInputProps>(
   ({ schema, value = "", onChange, placeholder, ...props }, ref) => {
     const inputRef = useRef<HTMLInputElement>(null);
     const [displayValue, setDisplayValue] = useState<string>("");
-    const [isFocused, setIsFocused] = useState(false);
-    const cursorManager = useMemo(
-      () => createCursorManager(schema.mask, schema.symbol),
-      [schema]
-    );
+    const [isFocused, setIsFocused] = useState<boolean>(false);
+    const [isBackspaceHeld, setIsBackspaceHeld] = useState<boolean>(false);
+    const isBackspaceHeldRef = useRef<boolean>(false);
+    const staticMaskIndexes = useStaticMaskIndexes(schema.mask, schema.symbol);
+
+    console.log(staticMaskIndexes);
 
     const formatValue = (
       input: string = schema.mask,
@@ -106,106 +111,140 @@ export const MaskedInput = forwardRef<HTMLInputElement, MaskedInputProps>(
       });
     };
 
-    const handleKeyUp = (e: React.KeyboardEvent<HTMLInputElement>) => {
-      const curPos = inputRef.current?.selectionStart || 0;
-      const maskArray = displayValue.split("");
-
-      if (e.key === "Backspace") {
-        // handle backspace at the end of input
-        e.preventDefault();
-        if (!inputRef.current) return;
-
-        console.log("curPos:", curPos);
-        console.log("displayValue: ", displayValue);
-        console.log("displayValue length: ", displayValue.length);
-
-        if (
-          curPos + 1 === displayValue.length &&
-          displayValue.indexOf(schema.symbol) === -1
-        ) {
-          const lastPos = displayValue.length - 1;
-          if (displayValue[lastPos] !== schema.symbol) {
-            maskArray[lastPos] = schema.symbol;
-            setDisplayValue(maskArray.join(""));
-            requestAnimationFrame(() => {
-              if (inputRef.current) {
-                inputRef.current.setSelectionRange(lastPos, lastPos);
-              }
-            });
-          }
-          return;
-        }
-        // handle first charater in input (backaspace)
-        if (curPos <= 1) {
-          console.log("AAAA");
-          if (displayValue[0] !== schema.symbol) {
-            maskArray[0] = schema.symbol;
-            setDisplayValue(maskArray.join(""));
-            requestAnimationFrame(() => {
-              if (inputRef.current) {
-                inputRef.current.setSelectionRange(0, 0);
-              }
-            });
-          }
-          return;
-        }
-
-        // Normal backspace behavior - clear current position and move cursor back
-        const previousPos = curPos - 1;
-        if (previousPos >= 0 && schema.mask[previousPos] === schema.symbol) {
-          maskArray[previousPos] = schema.symbol;
-          setDisplayValue(maskArray.join(""));
-          requestAnimationFrame(() => {
-            inputRef.current?.setSelectionRange(previousPos, previousPos);
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+      if (e.key === "Backspace" && !backspaceInterval) {
+        setIsBackspaceHeld(true); // Indicate Backspace is held
+        isBackspaceHeldRef.current = true; // prevent async state delay
+        const curPos = inputRef.current?.selectionStart || 0;
+        backspaceInterval = setInterval(() => {
+          setDisplayValue((prev) => {
+            if (prev[0] === schema.symbol) {
+              clearInterval(backspaceInterval!);
+              backspaceInterval = null;
+              return schema.mask;
+            } else {
+              return prev.slice(0, -1); // Remove last character continuously
+            }
           });
-        } else if (previousPos >= 0) {
-          // if we're at at fixed mask character, find previous input position
-          let prevEditablePos = previousPos;
-          // skip the static mask character
-          while (
-            prevEditablePos >= 0 &&
-            schema.mask[prevEditablePos] !== schema.symbol
+        }, backspaceHoldInterval);
+      }
+    };
+
+    // TO DO: fix the bug when holding backspace skipping all characters and delete only first one
+    const handleKeyUp = (e: React.KeyboardEvent<HTMLInputElement>) => {
+      if (e.key === "Backspace") {
+        // stop the backspace hold deletion
+        if (backspaceInterval) {
+          clearInterval(backspaceInterval);
+          backspaceInterval = null;
+        }
+        setIsBackspaceHeld(false);
+        isBackspaceHeldRef.current = false;
+
+        // If backspace was NOT held, delete **one character only**
+        if (!isBackspaceHeldRef.current && isBackspaceHeld) {
+          const curPos = inputRef.current?.selectionStart || 0;
+          const maskArray = displayValue.split("");
+          if (!inputRef.current) return;
+
+          // handle backspace at the end of input
+          if (
+            curPos + 1 === displayValue.length &&
+            displayValue.indexOf(schema.symbol) === -1
           ) {
-            prevEditablePos--;
+            const lastPos = displayValue.length - 1;
+            if (displayValue[lastPos] !== schema.symbol) {
+              maskArray[lastPos] = schema.symbol;
+              setDisplayValue(maskArray.join(""));
+              requestAnimationFrame(() => {
+                if (inputRef.current) {
+                  inputRef.current.setSelectionRange(lastPos, lastPos);
+                }
+              });
+            }
+            return;
           }
 
-          if (prevEditablePos >= 0) {
-            maskArray[prevEditablePos] = schema.symbol;
+          // handle first charater in input (backaspace)
+          if (curPos <= 1) {
+            if (displayValue[0] !== schema.symbol) {
+              maskArray[0] = schema.symbol;
+              setDisplayValue(maskArray.join(""));
+              requestAnimationFrame(() => {
+                if (inputRef.current) {
+                  inputRef.current.setSelectionRange(0, 0);
+                }
+              });
+            }
+            return;
+          }
+
+          // Normal backspace behavior - clear current position and move cursor back
+          const previousPos = curPos - 1;
+          if (previousPos >= 0 && schema.mask[previousPos] === schema.symbol) {
+            maskArray[previousPos] = schema.symbol;
             setDisplayValue(maskArray.join(""));
             requestAnimationFrame(() => {
-              if (inputRef.current) {
-                inputRef.current.setSelectionRange(
-                  prevEditablePos,
-                  prevEditablePos
-                );
-              }
+              inputRef.current?.setSelectionRange(previousPos, previousPos);
             });
+          } else if (previousPos >= 0) {
+            // if we're at at fixed mask character, find previous input position
+            let prevEditablePos = previousPos;
+            // skip the fixed mask character
+            while (
+              prevEditablePos >= 0 &&
+              schema.mask[prevEditablePos] !== schema.symbol
+            ) {
+              prevEditablePos--;
+            }
+
+            if (prevEditablePos >= 0) {
+              maskArray[prevEditablePos] = schema.symbol;
+              setDisplayValue(maskArray.join(""));
+              requestAnimationFrame(() => {
+                if (inputRef.current) {
+                  inputRef.current.setSelectionRange(
+                    prevEditablePos,
+                    prevEditablePos
+                  );
+                }
+              });
+            }
           }
         }
       }
     };
 
     const handleFocus = (e: React.FocusEvent<HTMLInputElement>) => {
+      e.stopPropagation();
       setIsFocused(true);
+      const inputValue = e.target.value;
 
-      // Format value
-      const { formatted } = formatValue(displayValue);
+      if (!inputValue) {
+        setDisplayValue(schema.mask);
+      }
 
-      setDisplayValue(formatted);
-      // Move cursor to first empty position
-      const firstEmptyPos = formatted.indexOf(schema.symbol);
-      // Find cursor position
-      const cursorPos = firstEmptyPos !== -1 ? firstEmptyPos : formatted.length;
-
-      // Set cursor position
-      requestAnimationFrame(() => {
-        if (inputRef.current) {
-          inputRef.current.setSelectionRange(cursorPos, cursorPos);
+      // Find next available symbol position that needs input
+      const nextInputPos = schema.mask.split("").findIndex((char, idx) => {
+        if (char === schema.symbol) {
+          const currentValue = displayValue[idx];
+          return !currentValue || currentValue === schema.symbol;
         }
+        return false;
       });
+
+      // Use setTimeout to ensure cursor position works across browsers
+      setTimeout(() => {
+        if (inputRef.current && nextInputPos !== -1) {
+          inputRef.current.setSelectionRange(nextInputPos, nextInputPos);
+        }
+      }, 0);
     };
 
     const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+      e.stopPropagation();
+      setIsFocused(false);
+      // Clear mask if no valid input
       if (displayValue === schema.mask) {
         setDisplayValue("");
       }
@@ -233,12 +272,11 @@ export const MaskedInput = forwardRef<HTMLInputElement, MaskedInputProps>(
             (ref as React.MutableRefObject<HTMLInputElement | null>).current =
               node;
           }
-          (
-            inputRef as React.MutableRefObject<HTMLInputElement | null>
-          ).current = node;
+          inputRef.current = node;
         }}
         value={displayValue}
         onChange={handleChange}
+        onKeyDown={handleKeyDown}
         onKeyUp={handleKeyUp}
         onFocus={handleFocus}
         onBlur={handleBlur}
