@@ -1,7 +1,6 @@
 import { useMemo } from "react";
 
 const useStaticMaskIndexes = (mask: string, symbol: string) => {
-  const staticIndexes = useMemo(() => {
     const indexes = [];
     for (let i = 0; i < mask.length; i++) {
       if (mask[i] !== symbol) {
@@ -9,9 +8,6 @@ const useStaticMaskIndexes = (mask: string, symbol: string) => {
       }
     }
     return indexes;
-  }, [mask, symbol]);
-
-  return staticIndexes;
 };
 
 export default useStaticMaskIndexes;
