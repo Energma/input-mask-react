@@ -1,7 +1,6 @@
 import React, { forwardRef, useMemo, useRef, useState } from "react";
 import useStaticMaskIndexes from "./util/useStaticMaskIndexes";
-
-
+import { isValidChar } from "./util/util";
 
 export interface Schema {
   mask: string;
@@ -19,54 +18,80 @@ export const MaskedInput = forwardRef<HTMLInputElement, MaskedInputProps>(
     const inputRef = useRef<HTMLInputElement>(null);
     const [displayValue, setDisplayValue] = useState<string>("");
     const [isFocused, setIsFocused] = useState<boolean>(false);
-    const staticMaskIndexes = useMemo(() => useStaticMaskIndexes(schema.mask, schema.symbol), [schema.mask]);
+    const staticMaskIndexes = useMemo(
+      () => useStaticMaskIndexes(schema.mask, schema.symbol),
+      [schema.mask]
+    );
 
-     const formatValue = (
+    const formatValue = (
       input: string = schema.mask,
       cursorPos: number = 0
     ): { formatted: string; newCursorPos: number } => {
       if (!schema.mask) return { formatted: "", newCursorPos: 0 };
 
-      if(cursorPos >= schema.mask.length){
-        return { formatted: input.slice(0, schema.mask.length), newCursorPos: cursorPos };
+      let newMaskFormated: string[] = input.split("");
+      let newCharInputIndex: number = cursorPos;
+      const currentChar = input[cursorPos - 1];
+      const isLastChar = cursorPos === input.length - 1;
+
+      console.log(`Input: ${input}, Cursor Position: ${cursorPos}`);
+      console.log(`Validating character: "${currentChar}"`);
+
+      if (cursorPos >= schema.mask.length || cursorPos < 0) {
+        return {
+          formatted: input.slice(0, schema.mask.length),
+          newCursorPos: cursorPos,
+        };
       }
-        
-      // ask if charapter is valid (if it is go on.. if not) -> return the formmated value and cursor possition
 
-      // take the new added charapter to the mask and see what to do with it:
+      // restrict input if it's not valid input, if it is proceed
+      if (
+        cursorPos >= 0 &&
+        !isValidChar(currentChar, schema.type) &&
+        cursorPos <= schema.mask.length
+      ) {
+        console.log(
+          `Character "${currentChar}" is invalid for type "${schema.type}".`
+        );
+        return {
+          formatted: displayValue,
+          newCursorPos: cursorPos - 1,
+        };
+      }
 
-      // New letter is added on cursorIndex -1 => this is possition of the index in mask.
-      let newCharInputIndex = cursorPos;
-      let newMaskFormated:string[] = input.split("");
-
-      console.log(`newCharInputIndex: ${newCharInputIndex},
-        newMaskFormated: ${newMaskFormated.join("")}`)
-
-
-        // before cursor position
-      for(let i = cursorPos; i <= cursorPos; i++){
-
-        if( newCharInputIndex-1 == staticMaskIndexes[0]){
-          const x = newMaskFormated[newCharInputIndex-1];
-          newMaskFormated[newCharInputIndex-1] = schema.mask[newCharInputIndex-1];
-          newMaskFormated[newCharInputIndex] = x;
-        }else{
+      for (let i = cursorPos; i <= cursorPos; i++) {
+        if (newCharInputIndex - 1 == staticMaskIndexes[0]) {
+          const fixed = newMaskFormated[newCharInputIndex - 1];
+          newMaskFormated[newCharInputIndex - 1] =
+            schema.mask[newCharInputIndex - 1];
+          newMaskFormated[newCharInputIndex] = fixed;
+        } else {
           newMaskFormated[i] = input[i];
-          if(cursorPos == staticMaskIndexes.filter(index => index == cursorPos)[0]){
+          if (
+            cursorPos ==
+            staticMaskIndexes.filter((index) => index == cursorPos)[0]
+          ) {
             newCharInputIndex++;
           }
         }
       }
 
+      // console.log(`newCharInputIndex: ${newCharInputIndex},
+      //   newMaskFormated: ${newMaskFormated.join("")}`);
+
       // after cursor position
-      for(let i = cursorPos; i <= schema.mask.length; i++){
+      for (let i = cursorPos; i <= schema.mask.length; i++) {
         newMaskFormated[i] = schema.mask[i];
       }
 
+      // console.log(`AAAnewCharInputIndex: ${newCharInputIndex},
+      //   newMaskFormated: ${newMaskFormated.join("")}`);
+      console.log(newMaskFormated, "maskkk");
 
-      console.log(`AAAnewCharInputIndex: ${newCharInputIndex},
-        newMaskFormated: ${newMaskFormated.join("")}`)
-      return { formatted: newMaskFormated.join(""), newCursorPos:newCharInputIndex };
+      return {
+        formatted: newMaskFormated.join(""),
+        newCursorPos: newCharInputIndex,
+      };
     };
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -82,8 +107,6 @@ export const MaskedInput = forwardRef<HTMLInputElement, MaskedInputProps>(
         newCursorPosition
       );
 
-      
-
       // Trigger onChange with the formatted value
       setDisplayValue(formatted);
       onChange?.({
@@ -98,10 +121,51 @@ export const MaskedInput = forwardRef<HTMLInputElement, MaskedInputProps>(
       });
     };
 
-
     const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+      const cursorPos = inputRef.current?.selectionStart ?? 0;
+      if (e.ctrlKey && e.key === "a") {
+        e.preventDefault();
+        if (inputRef.current) {
+          const length = displayValue.length;
+          inputRef.current.setSelectionRange(0, length);
+        }
+        return;
+      }
+
+      // Handle Backspace when text is selected (delete everything)
+      if (
+        e.key === "Backspace" &&
+        cursorPos === 0 &&
+        inputRef.current?.selectionEnd === displayValue.length
+      ) {
+        e.preventDefault();
+        setDisplayValue("");
+        return;
+      }
+
       if (e.key === "Backspace") {
-      
+        e.preventDefault();
+        if (cursorPos > 0) {
+          let newCursorPos = cursorPos - 1;
+
+          // Move cursor left if deleting a static character (skip static part of the mask)
+          while (newCursorPos > 0 && staticMaskIndexes.includes(newCursorPos)) {
+            newCursorPos--;
+          }
+
+          // Remove last valid character and replace it with mask symbol
+          const newValue =
+            displayValue.substring(0, newCursorPos) +
+            schema.mask[newCursorPos] +
+            displayValue.substring(newCursorPos + 1);
+
+          setDisplayValue(newValue);
+
+          // Move cursor to correct position after deletion
+          requestAnimationFrame(() => {
+            inputRef.current?.setSelectionRange(newCursorPos, newCursorPos);
+          });
+        }
       }
     };
 
@@ -109,13 +173,31 @@ export const MaskedInput = forwardRef<HTMLInputElement, MaskedInputProps>(
       e.stopPropagation();
       e.preventDefault();
       setIsFocused(true);
-      const inputValue = e.target.value;
 
-      
-      // When focused.. find the next place where is free place (where is symbol which should be replaced)
+      // Find the next available position to place the cursor
+      let nextEmptyPosition = -1;
+
+      // Loop through the mask and find the next placeholder symbol
+      for (let i = 0; i < schema.mask.length; i++) {
+        if (
+          schema.mask[i] === schema.symbol &&
+          (displayValue[i] === "" || displayValue[i] === schema.symbol)
+        ) {
+          nextEmptyPosition = i;
+          break; // Exit loop once found
+        }
+      }
+
+      if (nextEmptyPosition !== -1 && inputRef.current) {
+        // Move the cursor to the next empty position
+        inputRef.current.setSelectionRange(
+          nextEmptyPosition,
+          nextEmptyPosition
+        );
+      }
     };
 
-   const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+    const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
       e.stopPropagation();
       e.preventDefault();
 
@@ -125,7 +207,6 @@ export const MaskedInput = forwardRef<HTMLInputElement, MaskedInputProps>(
         setDisplayValue("");
       }
     };
-
 
     return (
       <input
@@ -143,7 +224,7 @@ export const MaskedInput = forwardRef<HTMLInputElement, MaskedInputProps>(
         value={displayValue}
         onChange={handleChange}
         onKeyDown={handleKeyDown}
-        onKeyUp={()=>{}}
+        onKeyUp={() => {}}
         onFocus={handleFocus}
         onBlur={handleBlur}
         placeholder={placeholder}
