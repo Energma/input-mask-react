@@ -12,16 +12,6 @@ function App() {
     countryCode: "",
   });
 
-  const schemas: {
-    id: string;
-    label: string;
-    schema: Schema;
-    className: string;
-    value: string;
-    onChange: (e: any) => void;
-  }[] = [
-    countryCode: ""
-  });
 
   const schemas: {id: string, label: string, schema: Schema, className: string, value: string, onChange: (e: any) => void}[] = [
     {

@@ -62,16 +62,5 @@ export const isValidChar = (
   }
 };
 
-export const cleanValue = (input: string, type: Schema['type']): string => {
-    switch(type) {
-        case 'numbers':
-            return input.replace(/[^\d]/g, '');
-        case 'letters':
-            return input.replace(/[^a-zA-Z]/g, '');
-        case 'mixed':
-        default:
-            return input.replace(/[^a-zA-Z0-9]/g, '');
-            
-    }
-};
+
 

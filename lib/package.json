@@ -36,8 +36,8 @@
   "files": [
     "dist"
   ],
-  "main": "./dist/input-mask-react.umd.js",
-  "module": "./src/mask-input.tsx",
+  "main": "../index.tsx",
+  "module": "./index.tsx",
   "repository": {
     "type": "git",
     "url": "https://github.com/lilic14991/input-mask-react"

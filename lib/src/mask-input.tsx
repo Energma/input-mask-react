@@ -1,6 +1,6 @@
 import React, { forwardRef, useMemo, useRef, useState } from "react";
 import { isValidChar } from "./util/util";
-import useStaticMaskIndexes from "./util/hook/useStaticMaskIndexes";
+import useStaticMaskIndexes from "./util/useStaticMaskIndexes";
 
 
 
@@ -84,7 +84,7 @@ export const MaskedInput = forwardRef<HTMLInputElement, MaskedInputProps>(
       return { formatted: maskArray.join(""), newCursorPos };
     };
 
-   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       e.stopPropagation();
       const inputElement = e.target;
       const inputValue = inputElement.value;
@@ -224,7 +224,8 @@ export const MaskedInput = forwardRef<HTMLInputElement, MaskedInputProps>(
             }
           }
         }
-
+      }
+    };
 
     const handleFocus = (e: React.FocusEvent<HTMLInputElement>) => {
       e.stopPropagation();
