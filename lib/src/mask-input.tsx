@@ -31,8 +31,7 @@ export const MaskedInput = forwardRef<HTMLInputElement, MaskedInputProps>(
 
       let newMaskFormated: string[] = input.split("");
       let newCharInputIndex: number = cursorPos;
-      const currentChar = input[cursorPos - 1];
-      const isLastChar = cursorPos === input.length - 1;
+      const currentChar = input[cursorPos - 1] || "";
 
       console.log(`Input: ${input}, Cursor Position: ${cursorPos}`);
       console.log(`Validating character: "${currentChar}"`);
@@ -47,8 +46,8 @@ export const MaskedInput = forwardRef<HTMLInputElement, MaskedInputProps>(
       // restrict input if it's not valid input, if it is proceed
       if (
         cursorPos >= 0 &&
-        !isValidChar(currentChar, schema.type) &&
-        cursorPos <= schema.mask.length
+        currentChar &&
+        !isValidChar(currentChar, schema.type)
       ) {
         console.log(
           `Character "${currentChar}" is invalid for type "${schema.type}".`
@@ -59,6 +58,7 @@ export const MaskedInput = forwardRef<HTMLInputElement, MaskedInputProps>(
         };
       }
 
+      // before cursor position
       for (let i = cursorPos; i <= cursorPos; i++) {
         if (newCharInputIndex - 1 == staticMaskIndexes[0]) {
           const fixed = newMaskFormated[newCharInputIndex - 1];
@@ -76,17 +76,21 @@ export const MaskedInput = forwardRef<HTMLInputElement, MaskedInputProps>(
         }
       }
 
-      // console.log(`newCharInputIndex: ${newCharInputIndex},
-      //   newMaskFormated: ${newMaskFormated.join("")}`);
+      console.log(`newCharInputIndex: ${newCharInputIndex},
+        newMaskFormated: ${newMaskFormated.join("")}`);
 
-      // after cursor position
+      // after cursor position preserve mask while updating input at cursor position
       for (let i = cursorPos; i <= schema.mask.length; i++) {
-        newMaskFormated[i] = schema.mask[i];
+        if (displayValue[i] && displayValue[i] !== schema.symbol) {
+          newMaskFormated[i] = displayValue[i];
+        } else {
+          newMaskFormated[i] = schema.mask[i];
+        }
       }
 
       // console.log(`AAAnewCharInputIndex: ${newCharInputIndex},
       //   newMaskFormated: ${newMaskFormated.join("")}`);
-      console.log(newMaskFormated, "maskkk");
+      // console.log(newMaskFormated, "maskkk");
 
       return {
         formatted: newMaskFormated.join(""),
@@ -101,6 +105,14 @@ export const MaskedInput = forwardRef<HTMLInputElement, MaskedInputProps>(
       const inputElement = e.target;
       const inputValue = inputElement.value;
       const newCursorPosition = inputElement.selectionStart || 0;
+
+      // Prevent input of invalid characters at the last position
+      if (
+        newCursorPosition === schema.mask.length &&
+        !isValidChar(inputValue[newCursorPosition - 1], schema.type)
+      ) {
+        return;
+      }
 
       const { formatted, newCursorPos } = formatValue(
         inputValue,
@@ -184,7 +196,7 @@ export const MaskedInput = forwardRef<HTMLInputElement, MaskedInputProps>(
           (displayValue[i] === "" || displayValue[i] === schema.symbol)
         ) {
           nextEmptyPosition = i;
-          break; // Exit loop once found
+          break;
         }
       }
 
