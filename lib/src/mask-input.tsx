@@ -16,7 +16,7 @@ interface MaskedInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
 export const MaskedInput = forwardRef<HTMLInputElement, MaskedInputProps>(
   ({ schema, value = "", onChange, placeholder, ...props }, ref) => {
     const inputRef = useRef<HTMLInputElement>(null);
-    const [displayValue, setDisplayValue] = useState<string>("");
+    const [displayValue, setDisplayValue] = useState<string>(value);
     const [isFocused, setIsFocused] = useState<boolean>(false);
     const staticMaskIndexes = useMemo(
       () => useStaticMaskIndexes(schema.mask, schema.symbol),
