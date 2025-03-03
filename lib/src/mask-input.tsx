@@ -1,6 +1,7 @@
 import React, { forwardRef, useMemo, useRef, useState } from "react";
 import useStaticMaskIndexes from "./util/useStaticMaskIndexes";
 import { isValidChar } from "./util/util";
+import { secureHeapUsed } from "crypto";
 
 export interface Schema {
   mask: string;
@@ -30,28 +31,25 @@ export const MaskedInput = forwardRef<HTMLInputElement, MaskedInputProps>(
       if (!schema.mask) return { formatted: "", newCursorPos: 0 };
 
       let newMaskFormated: string[] = input.split("");
+      console.log("newMaskFormated", newMaskFormated);
       let newCharInputIndex: number = cursorPos;
       const currentChar = input[cursorPos - 1] || "";
 
-      console.log(`Input: ${input}, Cursor Position: ${cursorPos}`);
-      console.log(`Validating character: "${currentChar}"`);
+      // console.log(`Input: ${input}, Cursor Position: ${cursorPos}`);
+      // console.log(`Validating character: "${currentChar}"`);
+      console.log(newMaskFormated, "mask");
 
-      if (cursorPos >= schema.mask.length || cursorPos < 0) {
+      if (cursorPos > schema.mask.length || cursorPos < 0) {
         return {
           formatted: input.slice(0, schema.mask.length),
           newCursorPos: cursorPos,
         };
       }
-
+      console.log(
+        `Character "${currentChar}" is invalid for type "${schema.type}".`
+      );
       // restrict input if it's not valid input, if it is proceed
-      if (
-        cursorPos >= 0 &&
-        currentChar &&
-        !isValidChar(currentChar, schema.type)
-      ) {
-        console.log(
-          `Character "${currentChar}" is invalid for type "${schema.type}".`
-        );
+      if (cursorPos >= 0 && !isValidChar(currentChar, schema.type)) {
         return {
           formatted: displayValue,
           newCursorPos: cursorPos - 1,
@@ -59,7 +57,7 @@ export const MaskedInput = forwardRef<HTMLInputElement, MaskedInputProps>(
       }
 
       // before cursor position
-      for (let i = cursorPos; i <= cursorPos; i++) {
+      for (let i = 0; i <= cursorPos; i++) {
         if (newCharInputIndex - 1 == staticMaskIndexes[0]) {
           const fixed = newMaskFormated[newCharInputIndex - 1];
           newMaskFormated[newCharInputIndex - 1] =
@@ -76,8 +74,8 @@ export const MaskedInput = forwardRef<HTMLInputElement, MaskedInputProps>(
         }
       }
 
-      console.log(`newCharInputIndex: ${newCharInputIndex},
-        newMaskFormated: ${newMaskFormated.join("")}`);
+      // console.log(`newCharInputIndex: ${newCharInputIndex},
+      //   newMaskFormated: ${newMaskFormated.join("")}`);
 
       // after cursor position preserve mask while updating input at cursor position
       for (let i = cursorPos; i <= schema.mask.length; i++) {
@@ -90,7 +88,7 @@ export const MaskedInput = forwardRef<HTMLInputElement, MaskedInputProps>(
 
       // console.log(`AAAnewCharInputIndex: ${newCharInputIndex},
       //   newMaskFormated: ${newMaskFormated.join("")}`);
-      // console.log(newMaskFormated, "maskkk");
+      console.log(newMaskFormated, "maskkk");
 
       return {
         formatted: newMaskFormated.join(""),
@@ -105,14 +103,6 @@ export const MaskedInput = forwardRef<HTMLInputElement, MaskedInputProps>(
       const inputElement = e.target;
       const inputValue = inputElement.value;
       const newCursorPosition = inputElement.selectionStart || 0;
-
-      // Prevent input of invalid characters at the last position
-      if (
-        newCursorPosition === schema.mask.length &&
-        !isValidChar(inputValue[newCursorPosition - 1], schema.type)
-      ) {
-        return;
-      }
 
       const { formatted, newCursorPos } = formatValue(
         inputValue,
