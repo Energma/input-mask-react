@@ -1,6 +1,10 @@
 import React, { forwardRef, useMemo, useRef, useState } from "react";
 import useStaticMaskIndexes from "./util/useStaticMaskIndexes";
-import { isValidChar } from "./util/util";
+import {
+  applyMask,
+  getCursorPositionAfterPaste,
+  isValidChar,
+} from "./util/util";
 import { secureHeapUsed } from "crypto";
 
 export interface Schema {
@@ -101,26 +105,62 @@ export const MaskedInput = forwardRef<HTMLInputElement, MaskedInputProps>(
       e.preventDefault();
 
       const inputElement = e.target;
+      const inputEvent = e.nativeEvent as InputEvent;
       const inputValue = inputElement.value;
       const newCursorPosition = inputElement.selectionStart || 0;
+      const isPaste = inputEvent.inputType === "insertFromPaste";
 
-      const { formatted, newCursorPos } = formatValue(
-        inputValue,
-        newCursorPosition
-      );
+      if (isPaste) {
+        console.log("p");
+        // Filter out invalid characters based on schema.type
+        const rawInputValue = Array.from(inputValue)
+          .filter((char) => isValidChar(char, schema.type))
+          .join("");
 
-      // Trigger onChange with the formatted value
-      setDisplayValue(formatted);
-      onChange?.({
-        ...e,
-        target: { ...e.target, value: formatted },
-      });
+        const formattedValue = applyMask(
+          rawInputValue,
+          schema.mask,
+          staticMaskIndexes,
+          schema.symbol
+        );
 
-      requestAnimationFrame(() => {
-        if (inputRef.current) {
-          inputRef.current.setSelectionRange(newCursorPos, newCursorPos);
-        }
-      });
+        // Trigger onChange with the formatted value
+        setDisplayValue(formattedValue);
+        onChange?.({
+          ...e,
+          target: { ...e.target, value: formattedValue },
+        });
+
+        const cursorPosition = getCursorPositionAfterPaste(
+          rawInputValue,
+          schema.mask,
+          staticMaskIndexes
+        );
+
+        requestAnimationFrame(() => {
+          if (inputRef.current) {
+            inputRef.current.setSelectionRange(cursorPosition, cursorPosition);
+          }
+        });
+      } else {
+        const { formatted, newCursorPos } = formatValue(
+          inputValue,
+          newCursorPosition
+        );
+
+        // Trigger onChange with the formatted value
+        setDisplayValue(formatted);
+        onChange?.({
+          ...e,
+          target: { ...e.target, value: formatted },
+        });
+
+        requestAnimationFrame(() => {
+          if (inputRef.current) {
+            inputRef.current.setSelectionRange(newCursorPos, newCursorPos);
+          }
+        });
+      }
     };
 
     const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
