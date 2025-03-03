@@ -110,6 +110,9 @@ export const MaskedInput = forwardRef<HTMLInputElement, MaskedInputProps>(
       const newCursorPosition = inputElement.selectionStart || 0;
       const isPaste = inputEvent.inputType === "insertFromPaste";
 
+      let formattedValue: string;
+      let cursorPosition: number;
+
       if (isPaste) {
         console.log("p");
         // Filter out invalid characters based on schema.type
@@ -117,7 +120,8 @@ export const MaskedInput = forwardRef<HTMLInputElement, MaskedInputProps>(
           .filter((char) => isValidChar(char, schema.type))
           .join("");
 
-        const formattedValue = applyMask(
+        // format input to preserve static part of the mask
+        formattedValue = applyMask(
           rawInputValue,
           schema.mask,
           staticMaskIndexes,
@@ -131,7 +135,8 @@ export const MaskedInput = forwardRef<HTMLInputElement, MaskedInputProps>(
           target: { ...e.target, value: formattedValue },
         });
 
-        const cursorPosition = getCursorPositionAfterPaste(
+        // calculate cursor postion of pasted input
+        cursorPosition = getCursorPositionAfterPaste(
           rawInputValue,
           schema.mask,
           staticMaskIndexes

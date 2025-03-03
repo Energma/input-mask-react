@@ -67,7 +67,7 @@ export const applyMask = (
   mask: string,
   staticIndexes: number[],
   symbol: Schema["symbol"]
-) => {
+): string => {
   let result = "";
   let rawIndex = 0;
 
@@ -92,7 +92,7 @@ export const getCursorPositionAfterPaste = (
   rawInput: string,
   mask: string,
   staticIndexes: number[]
-) => {
+): number => {
   let cursorPosition = 0;
   let rawIndex = 0;
 
