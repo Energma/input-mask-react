@@ -5,7 +5,6 @@ import {
   getCursorPositionAfterPaste,
   isValidChar,
 } from "./util/util";
-import { secureHeapUsed } from "crypto";
 
 export interface Schema {
   mask: string;
@@ -62,7 +61,7 @@ export const MaskedInput = forwardRef<HTMLInputElement, MaskedInputProps>(
 
       // before cursor position
       for (let i = 0; i <= cursorPos; i++) {
-        if (newCharInputIndex - 1 == staticMaskIndexes[0]) {
+        if (staticMaskIndexes.includes(newCharInputIndex - 1)) {
           const fixed = newMaskFormated[newCharInputIndex - 1];
           newMaskFormated[newCharInputIndex - 1] =
             schema.mask[newCharInputIndex - 1];
@@ -223,25 +222,30 @@ export const MaskedInput = forwardRef<HTMLInputElement, MaskedInputProps>(
 
       // Find the next available position to place the cursor
       let nextEmptyPosition = -1;
+      const inputLength = displayValue.length;
 
-      // Loop through the mask and find the next placeholder symbol
       for (let i = 0; i < schema.mask.length; i++) {
+        // Check if it's a placeholder symbol or if it is unfilled
         if (
           schema.mask[i] === schema.symbol &&
-          (displayValue[i] === "" || displayValue[i] === schema.symbol)
+          (!displayValue[i] || displayValue[i] === schema.symbol)
         ) {
           nextEmptyPosition = i;
           break;
         }
       }
 
-      if (nextEmptyPosition !== -1 && inputRef.current) {
-        // Move the cursor to the next empty position
-        inputRef.current.setSelectionRange(
-          nextEmptyPosition,
-          nextEmptyPosition
-        );
-      }
+      requestAnimationFrame(() => {
+        if (inputRef.current && nextEmptyPosition !== -1) {
+          // Move the cursor to the next available position
+          inputRef.current.setSelectionRange(
+            nextEmptyPosition,
+            nextEmptyPosition
+          );
+        } else {
+          inputRef.current!.setSelectionRange(inputLength, inputLength);
+        }
+      });
     };
 
     const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
