@@ -158,21 +158,21 @@ describe("MaskedInput Component - Functionality", () => {
         cursorPosition: 9,
       },
     },
-    // {
-    //   name: 'handles partial input',
-    //   args: {
-    //     schema: {
-    //       mask: '+7 (___) ___-__-__',
-    //       symbol: '_',
-    //       type: 'numbers' as const
-    //     },
-    //     value: '999'
-    //   },
-    //   want: {
-    //     value: '+7 (999) ___-__-__',
-    //     cursorPosition: 8
-    //   }
-    // },
+    {
+      name: 'handles partial input',
+      args: {
+        schema: {
+          mask: '+7 (___) ___-__-__',
+          symbol: '_',
+          type: 'mixed' as const
+        },
+        value: '999'
+      },
+      want: {
+        value: '999',
+        cursorPosition: 3
+      }
+    },
     {
       name: "handles custom symbol mask",
       args: {
@@ -274,20 +274,7 @@ describe("MaskedInput Component - Edge Cases", () => {
       },
       want: {
         value: "+7 (999) 555-44-33",
-      },
-      action: (input: HTMLInputElement) => {
-        // expect(input.value).toBe('+7 (___) ___-__-__');
-        // const pasteEvent = new Event('paste', {
-        //   bubbles: true,
-        //   cancelable: true,
-        // }) as ClipboardEvent;
-        // Object.defineProperty(pasteEvent, 'clipboardData', {
-        //   value: {
-        //     getData: () => '9995554433'
-        //   }
-        // });
-        // input.dispatchEvent(pasteEvent);
-      },
+      }
     },
   ];
 
@@ -306,11 +293,8 @@ describe("MaskedInput Component - Edge Cases", () => {
         action(input);
       }
 
-      // if (want.finalValue) {
-      //   expect(input.value).toBe(want.finalValue);
-      // } else {
       expect(input.value).toBe(want.value);
-      // }
+
     });
   });
 });
