@@ -13,14 +13,14 @@ pnpm dev
 ```
 
 # (Compatibility)
+
 - **React 19+**
 - **NEXT 15+**
 
-
 # Repository
- 
- - **Lib**: Workspace where the core library is developed.
- - **Test**: Workspace where we simulate user behavior.
+
+- **Lib**: Workspace where the core library is developed.
+- **Test**: Workspace where we simulate user behavior.
 
 ## Features
 
@@ -32,7 +32,7 @@ pnpm dev
 ## Installation
 
 To install the `input-mask-react` package, run the following command in your project:
-  
+
 ```bash
 npm install input-mask-react
 ```
@@ -41,3 +41,109 @@ npm install input-mask-react
 pnpm add input-mask-react
 ```
 
+## Usage Examples
+
+Here are some examples of how you can use the `MaskedInput` component with different types of input masks:
+
+# schema types:
+
+- **numbers type accept 0-9**
+- **letters type accept a-zA-Z**
+- **mixed type accept a-zA-Z0-9**
+
+# schema symbol can be of any character
+
+#### Create states to hold your inputs
+
+```jsx
+const [values, setValues] = useState({
+  creditCardExpiration: "",
+  zipCode: "",
+  canadianZipCode: "",
+  telephone: "",
+  creditCardNumber: "",
+  countryCode: "",
+});
+```
+
+#### Schema interface:
+
+```jsx
+interface Schema {
+  mask: string;
+  symbol: string;
+  type?: "numbers" | "letters" | "mixed";
+}
+```
+
+You can also add object where properties can be `className`, `id`, `label`, etc like any other `input element`.
+
+`placeholder` can be anything you like but good practice is to have mask there.
+
+### Credit Card Expiration Date
+
+```jsx
+<MaskedInput
+  schema={{ mask: "__/__", symbol: "_", type: "numbers" }}
+  value={zipCode}
+  onChange={(e) => setZipCode(e.target.value)}
+  placeholder="__/__"
+/>
+```
+
+### Zip Code
+
+```jsx
+<MaskedInput
+  schema={{ mask: "_____", symbol: "_", type: "numbers" }}
+  value={zipCode}
+  onChange={(e) => setZipCode(e.target.value)}
+  placeholder="_____"
+/>
+```
+
+### Canadian Zip Code
+
+```jsx
+<MaskedInput
+  schema={{ mask: "XXX XXX", symbol: "X", type: "mixed" }}
+  value={canadianZipCode}
+  onChange={(e) => setCanadianZipCode(e.target.value)}
+  placeholder="XXX XXX"
+/>
+```
+
+### Telephone Number
+
+```jsx
+<MaskedInput
+  schema={{ mask: "(XXX)XXX-XXXX", symbol: "X", type: "numbers" }}
+  value={telephone}
+  onChange={(e) => setTelephone(e.target.value)}
+  placeholder="(XXX)XXX-XXXX"
+/>
+```
+
+### Credit Card Number
+
+```jsx
+<MaskedInput
+  schema={{ mask: "0000 0000 0000 0000", symbol: "0", type: "numbers" }}
+  value={creditCardNumber}
+  onChange={(e) => setCreditCardNumber(e.target.value)}
+  placeholder="0000 0000 0000 0000"
+/>
+```
+
+### Country Code
+
+```jsx
+<MaskedInput
+  schema={{ mask: "XXX", symbol: "X", type: "letters" }}
+  value={countryCode}
+  onChange={(e) => setCountryCode(e.target.value)}
+  placeholder="XXX"
+/>
+```
+
+These examples demonstrate the flexibility of the `MaskedInput` component and how it can be integrated into a React application to handle various input formats.
