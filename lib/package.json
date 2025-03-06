@@ -40,7 +40,7 @@
   "module": "./dist/input-mask-react.es.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/lilic14991/input-mask-react"
+    "url": "https://github.com/Energma/input-mask-react"
   },
   "publishConfig": {
     "registry": "https://npm.pkg.github.com"
