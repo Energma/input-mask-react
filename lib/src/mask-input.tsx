@@ -9,7 +9,7 @@ import {
 export interface Schema {
   mask: string;
   symbol: string;
-  type?: "numbers" | "letters" | "mixed";
+  type: "numbers" | "letters" | "mixed";
 }
 
 interface MaskedInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
@@ -34,13 +34,8 @@ export const MaskedInput = forwardRef<HTMLInputElement, MaskedInputProps>(
       if (!schema.mask) return { formatted: "", newCursorPos: 0 };
 
       let newMaskFormated: string[] = input.split("");
-      console.log("newMaskFormated", newMaskFormated);
       let newCharInputIndex: number = cursorPos;
       const currentChar = input[cursorPos - 1] || "";
-
-      // console.log(`Input: ${input}, Cursor Position: ${cursorPos}`);
-      // console.log(`Validating character: "${currentChar}"`);
-      console.log(newMaskFormated, "mask");
 
       if (cursorPos > schema.mask.length || cursorPos < 0) {
         return {
@@ -48,9 +43,6 @@ export const MaskedInput = forwardRef<HTMLInputElement, MaskedInputProps>(
           newCursorPos: cursorPos,
         };
       }
-      console.log(
-        `Character "${currentChar}" is invalid for type "${schema.type}".`
-      );
       // restrict input if it's not valid input, if it is proceed
       if (cursorPos >= 0 && !isValidChar(currentChar, schema.type)) {
         return {
@@ -77,9 +69,6 @@ export const MaskedInput = forwardRef<HTMLInputElement, MaskedInputProps>(
         }
       }
 
-      // console.log(`newCharInputIndex: ${newCharInputIndex},
-      //   newMaskFormated: ${newMaskFormated.join("")}`);
-
       // after cursor position preserve mask while updating input at cursor position
       for (let i = cursorPos; i <= schema.mask.length; i++) {
         if (displayValue[i] && displayValue[i] !== schema.symbol) {
@@ -88,10 +77,6 @@ export const MaskedInput = forwardRef<HTMLInputElement, MaskedInputProps>(
           newMaskFormated[i] = schema.mask[i];
         }
       }
-
-      // console.log(`AAAnewCharInputIndex: ${newCharInputIndex},
-      //   newMaskFormated: ${newMaskFormated.join("")}`);
-      console.log(newMaskFormated, "maskkk");
 
       return {
         formatted: newMaskFormated.join(""),
@@ -113,7 +98,6 @@ export const MaskedInput = forwardRef<HTMLInputElement, MaskedInputProps>(
       let cursorPosition: number;
 
       if (isPaste) {
-        console.log("p");
         // Filter out invalid characters based on schema.type
         const rawInputValue = Array.from(inputValue)
           .filter((char) => isValidChar(char, schema.type))
