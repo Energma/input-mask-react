@@ -48,19 +48,6 @@ Here are some examples of how you can use the `MaskedInput` component with diffe
 
 # schema symbol can be of any character
 
-#### Create states to hold your inputs
-
-```jsx
-const [values, setValues] = useState({
-  creditCardExpiration: "",
-  zipCode: "",
-  canadianZipCode: "",
-  telephone: "",
-  creditCardNumber: "",
-  countryCode: "",
-});
-```
-
 #### Schema interface:
 
 ```jsx
