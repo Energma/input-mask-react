@@ -211,6 +211,4 @@ These examples demonstrate the flexibility of the `MaskedInput` component and ho
 
 ## License
 
-react-native-mask-input is released under the MIT license. See [LICENSE](../LICENSE) for details.
-
-Any question or support will welcome.
+react-mask-input is released under the MIT license. See [LICENSE](../LICENSE) for details.
