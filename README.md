@@ -1,16 +1,6 @@
 # Input Mask React
 
-`input-mask-react` is a React component for creating input fields with customizable input masks. It allows you to format user input according to a specified mask, handling dynamic cursor positions and formatting on-the-fly. This component supports various types of input masks such as numbers, letters, and mixed formats.
-
-# Local Development Setup
-
-```bash
-pnpm install
-
-pnpm build
-
-pnpm dev
-```
+`input-mask-react` is a React component for creating input fields with customizable input masks. It allows you to format user input according to a specified mask, handling dynamic cursor positions and formatting on-the-fly. This component supports various types of input masks such as numbers, letters, and both formats.
 
 # (Compatibility)
 
@@ -19,8 +9,8 @@ pnpm dev
 
 # Repository
 
-- **Lib**: Workspace where the core library is developed.
-- **Test**: Workspace where we simulate user behavior.
+- **lib**: Workspace where the core library is developed.
+- **test-app**: Workspace where we simulate user behavior.
 
 ## Features
 
@@ -28,6 +18,11 @@ pnpm dev
 - **Dynamic Cursor Management**: The cursor position updates automatically as the user types, ensuring that the mask format is followed properly.
 - **Type-based Input Sanitization**: The input is sanitized based on the selected type (numbers, letters, or mixed).
 - **React Integration**: It is built specifically for use with React, and works seamlessly with TypeScript.
+
+## Summary
+
+This repository contains code for input-react-mask
+(https://github.com/Energma/input-mask-react)
 
 ## Installation
 
@@ -72,7 +67,7 @@ const [values, setValues] = useState({
 interface Schema {
   mask: string;
   symbol: string;
-  type?: "numbers" | "letters" | "mixed";
+  type: "numbers" | "letters" | "mixed";
 }
 ```
 
