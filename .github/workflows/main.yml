@@ -1,21 +1,46 @@
-name: Node.js package 
+name: Publish Package
 
-on: 
+on:
   push:
-    branches: 
-      - main
+    tags:
+      - "v*.*.*"  # Runs only on version tags like v1.0.0
 
-jobs: 
-  publish-gpr:
+jobs:
+  publish:
+    name: Publish to npm and GitHub Packages
     runs-on: ubuntu-latest
-    steps: 
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js and pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: latest
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
           node-version: 20
-          registry-url: https://npm.pkg.github.com/
-          scope: '@energma'
-      - run: npm install
-      - run: npm publish
-        env: 
-          NPM_AUTH_TOKEN: ${{secrets.NPM_AUTH_TOKEN}}
+          registry-url: "https://registry.npmjs.org/"
+          cache: "pnpm"
+
+      - name: Install Dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Run Tests
+        run: pnpm test
+
+      - name: Build Package
+        run: pnpm build
+
+      - name: Publish to npmjs.com
+        run: npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Publish to GitHub Packages
+        run: npm publish --registry=https://npm.pkg.github.com
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
