@@ -36,6 +36,7 @@
   "files": [
     "dist"
   ],
+  "types": "dist/index.d.ts",
   "main": "./dist/input-mask-react.umd.js",
   "module": "./dist/input-mask-react.es.js",
   "repository": {
