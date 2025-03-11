@@ -44,6 +44,6 @@
     "url": "https://github.com/Energma/input-mask-react"
   },
   "publishConfig": {
-    "registry": "https://npm.pkg.github.com"
+    "registry": "https://registry.npmjs.org/"
   }
 }
