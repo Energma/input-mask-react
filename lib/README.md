@@ -1,41 +1,58 @@
+# 🛠️ @energma/input-mask-react
+
 <h1 align="center">Input Mask React</h1>
 
 <p align="center">
   <img src="https://img.shields.io/badge/platform-Android%20%7C%20iOS%20%7C%20Browser-brightgreen" />
   <img src="https://img.shields.io/badge/React-blue" />
   <img src="https://img.shields.io/badge/NextJS-black" />
-  <img src="https://img.shields.io/npm/dm/energma/input-mask-react" />
+  <img src="https://img.shields.io/npm/dt/@energma/input-mask-react" />
   <img src="https://img.shields.io/github/issues-closed-raw/energma/input-mask-react" />
   <img src="https://img.shields.io/bundlephobia/min/input-mask-react" />
   <img src="https://img.shields.io/npm/types/input-mask-react" />
-  <img src="https://img.shields.io/npm/v/input-mask-react" />
+  <img src="https://img.shields.io/npm/v/@energma/input-mask-react" />  
   <img src="https://img.shields.io/github/license/energma/input-mask-react" />
 </p>
 
 `input-mask-react` is a React component for creating input fields with customizable input masks. It allows you to format user input according to a specified mask, handling dynamic cursor positions and formatting on-the-fly. This component supports various types of input masks such as numbers, letters, and both formats.
 
-<p align="center">
-  <img src="https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExbnRxcHdubDFsYmhhejJhZWYxd293ZTRicm84b3VsM3B4YnB4bmw5aiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/M9pKngr7PTR1E82iyw/giphy.gif" width="500px" />
-</p>
+## Compatibility
 
-<br>
+- **React 19+**
+- **NEXT 15+**
 
-- [Features](#features)
-- [Installation](#installation)
-- [Summary](#summary)
-- [Repository](#repository)
-- [Compatibility](#compatibility)
-- [Schema Types](#schema-types)
-- [Usage](#usage)
-- [Props](#props)
-- [Examples](#examples)
-  - [Credit Card Expiration Date](#credit-card-expiration-date)
-  - [Zip Code](#credit-card-expiration-date)
-  - [Canadian Zip Code](#canadian-zip-code)
-  - [Telephone Number](#telephone-number)
-  - [Credit Card Number](#credit-card-number)
-  - [Coutry Code](#country-code)
-- [License](#license)
+## Table of Contents
+
+<table>
+  <tr>
+    <td valign="top">
+      <ul>
+        <li><a href="#features">Features</a></li>
+        <li><a href="#installation">Installation</a></li>
+        <li><a href="#summary">Summary</a></li>
+        <li><a href="#repository">Repository</a></li>
+        <li><a href="#compatibility">Compatibility</a></li>
+        <li><a href="#schema-types">Schema Types</a></li>
+        <li><a href="#usage">Usage</a></li>
+        <li><a href="#props">Props</a></li>
+        <li><a href="#examples">Examples</a></li>
+        <ul>
+          <li><a href="#credit-card-expiration-date">Credit Card Expiration Date</a></li>
+          <li><a href="#zip-code">Zip Code</a></li>
+          <li><a href="#canadian-zip-code">Canadian Zip Code</a></li>
+          <li><a href="#telephone-number">Telephone Number</a></li>
+          <li><a href="#credit-card-number">Credit Card Number</a></li>
+          <li><a href="#country-code">Country Code</a></li>
+        </ul>
+        <li><a href="#license">License</a></li>
+      </ul>
+    </td>
+    <td width="100px">&nbsp;</td>
+    <td align="right" valign="center">
+      <img src="https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExbnRxcHdubDFsYmhhejJhZWYxd293ZTRicm84b3VsM3B4YnB4bmw5aiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/M9pKngr7PTR1E82iyw/giphy.gif" width="500px" />
+    </td>
+  </tr>
+</table>
 
 ## Features
 
@@ -46,46 +63,24 @@
 
 ## Installation
 
-To install the `input-mask-react` package, run the following command in your project:
+To install the `@energma/input-mask-react` package, run the following command in your project:
 
 ```bash
-npm install input-mask-react
+npm install @energma/input-mask-react
 ```
 
 ```bash
-pnpm add input-mask-react
+pnpm add @energma/input-mask-react
 ```
 
 ```bash
-yarn add react-native-mask-input
+yarn add @energma/input-mask-react
 ```
 
 ## Summary
 
 This repository contains code for input-react-mask
 (https://github.com/Energma/input-mask-react)
-
-# Repository
-
-- **lib**: Workspace where the core library is developed.
-- **test-app**: Workspace where we simulate user behavior.
-
-to run test application from root execute:
-
-```bash
-npm run dev
-```
-
-or
-
-```bash
-pnpm dev
-```
-
-## Compatibility
-
-- **React 19+**
-- **NEXT 15+**
 
 ## Schema Types:
 
@@ -146,8 +141,8 @@ You can also add object where properties can be `className`, `id`, `label`, etc 
 ```jsx
 <MaskedInput
   schema={{ mask: "__/__", symbol: "_", type: "numbers" }}
-  value={zipCode}
-  onChange={(e) => setZipCode(e.target.value)}
+  value={creditCardExpiration}
+  onChange={(e) => setCreditCardExpiration(e.target.value)}
   placeholder="__/__"
 />
 ```
@@ -211,4 +206,4 @@ These examples demonstrate the flexibility of the `MaskedInput` component and ho
 
 ## License
 
-react-mask-input is released under the MIT license. See [LICENSE](../LICENSE) for details.
+`@energma/input-mask-react` is released under the MIT license. See [LICENSE](https://github.com/Energma/input-mask-react/blob/main/LICENSE) for details.
