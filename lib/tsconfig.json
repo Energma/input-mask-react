@@ -20,5 +20,9 @@
     "jsx": "react-jsx"
   },
   "include": ["src", "index.tsx"],
-  "exclude": ["src/mask-input.test.tsx"]
+  "exclude": [
+    "src/mask-input.test.tsx",
+    "src/util/util.test.ts",
+    "src/util/useStaticMaskIndexes.test.ts"
+  ]
 }
