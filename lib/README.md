@@ -23,36 +23,29 @@
 
 ## Table of Contents
 
-<table>
-  <tr>
-    <td valign="top">
-      <ul>
-        <li><a href="#features">Features</a></li>
-        <li><a href="#installation">Installation</a></li>
-        <li><a href="#summary">Summary</a></li>
-        <li><a href="#repository">Repository</a></li>
-        <li><a href="#compatibility">Compatibility</a></li>
-        <li><a href="#schema-types">Schema Types</a></li>
-        <li><a href="#usage">Usage</a></li>
-        <li><a href="#props">Props</a></li>
-        <li><a href="#examples">Examples</a></li>
-        <ul>
-          <li><a href="#credit-card-expiration-date">Credit Card Expiration Date</a></li>
-          <li><a href="#zip-code">Zip Code</a></li>
-          <li><a href="#canadian-zip-code">Canadian Zip Code</a></li>
-          <li><a href="#telephone-number">Telephone Number</a></li>
-          <li><a href="#credit-card-number">Credit Card Number</a></li>
-          <li><a href="#country-code">Country Code</a></li>
-        </ul>
-        <li><a href="#license">License</a></li>
-      </ul>
-    </td>
-    <td width="100px">&nbsp;</td>
-    <td align="right" valign="center">
-      <img src="https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExbnRxcHdubDFsYmhhejJhZWYxd293ZTRicm84b3VsM3B4YnB4bmw5aiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/M9pKngr7PTR1E82iyw/giphy.gif" width="500px" />
-    </td>
-  </tr>
-</table>
+<br>
+
+<img align="right" src="https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExbnRxcHdubDFsYmhhejJhZWYxd293ZTRicm84b3VsM3B4YnB4bmw5aiZlcD12MV9pbnRlcm5naWZfYnlfaWQmY3Q9Zw/M9pKngr7PTR1E82iyw/giphy.gif" width="600px"/>
+
+<br>
+
+- [Features](#features)
+- [Installation](#installation)
+- [Summary](#summary)
+- [Compatibility](#compatibility)
+- [Schema Types](#schema-types)
+- [Usage](#usage)
+- [Props](#props)
+- [Examples](#examples)
+  - [Credit Card Expiration Date](#credit-card-expiration-date)
+  - [Zip Code](#zip-code)
+  - [Canadian Zip Code](#canadian-zip-code)
+  - [Telephone Number](#telephone-number)
+  - [Credit Card Number](#credit-card-number)
+  - [Country Code](#country-code)
+- [License](#license)
+
+<br>
 
 ## Features
 
@@ -126,13 +119,15 @@ You can also add object where properties can be `className`, `id`, `label`, etc 
 
 ## Props
 
-| Prop              | Type                    | Default | Description                                                                                                                                                                                                                                                                                                                                                                                 |
-| ----------------- | ----------------------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **...InputProps** |                         |         | Inherit all [props of `Input`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input).                                                                                                                                                                                                                                                                                            |
-| **`schema`**      | [schema](#schema-types) |         | Object defines the masking rules for user input. It includes the following properties. `mask` (string) – Defines the input pattern using a placeholder symbol, if it is an RegExp, it will validate the input on it. `symbol` (string) – Represents the character that will be replaced by user input. `type` (string) – Specifies the [type](#schema-types) of input allowed. **REQUIRED** |
-| **`value`**       | number                  |         | The value for controlled input. **REQUIRED**                                                                                                                                                                                                                                                                                                                                                |
-| **`onChange`**    | function                |         | Callback that is called when the input's text changes. **REQUIRED**                                                                                                                                                                                                                                                                                                                         |
-| **`onFocus`**     | function                |         | Triggered when user clicks away and then focus it again it will position cursor at next valid input.                                                                                                                                                                                                                                                                                        |
+| Prop              | Type &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;                    | Description                                                                                                                                                                                                                                                                                                                                                                    |
+| ----------------- | ------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **...InputProps** |                                                                    | Inherit all [props of `Input`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input).                                                                                                                                                                                                                                                                               |
+| **`schema`**      | [schema](#schema-types) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | Object defines the masking rules for user input.<br><br> - `mask` (string) – Defines the input pattern using a placeholder symbol. If it is a `RegExp`, it will validate the input.<br> - `symbol` (string) – Represents the character that will be replaced by user input.<br> - `type` (string) – Specifies the [type](#schema-types) of input allowed.<br><br> **REQUIRED** |
+| **`value`**       | number &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;                  | The value for controlled input.<br><br> **REQUIRED**                                                                                                                                                                                                                                                                                                                           |
+| **`onChange`**    | function &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;                | Callback that is called when the input's text changes.<br><br> **REQUIRED**                                                                                                                                                                                                                                                                                                    |
+| **`onFocus`**     | function &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;                | Triggered when the user clicks away and then focuses again. It will position the cursor at the next valid input.                                                                                                                                                                                                                                                               |
+
+<br>
 
 # Examples
 
