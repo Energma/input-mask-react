@@ -21,13 +21,11 @@
 - **React 19+**
 - **NEXT 15+**
 
+<br>
+
+<img align="center" src="https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExbnRxcHdubDFsYmhhejJhZWYxd293ZTRicm84b3VsM3B4YnB4bmw5aiZlcD12MV9pbnRlcm5naWZfYnlfaWQmY3Q9Zw/M9pKngr7PTR1E82iyw/giphy.gif" width="500px"/>
+
 ## Table of Contents
-
-<br>
-
-<img align="right" src="https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExbnRxcHdubDFsYmhhejJhZWYxd293ZTRicm84b3VsM3B4YnB4bmw5aiZlcD12MV9pbnRlcm5naWZfYnlfaWQmY3Q9Zw/M9pKngr7PTR1E82iyw/giphy.gif" width="600px"/>
-
-<br>
 
 - [Features](#features)
 - [Installation](#installation)
@@ -44,8 +42,6 @@
   - [Credit Card Number](#credit-card-number)
   - [Country Code](#country-code)
 - [License](#license)
-
-<br>
 
 ## Features
 
