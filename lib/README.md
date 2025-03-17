@@ -91,19 +91,60 @@ interface Schema {
 
 ## Usage
 
-```jsx
-import MaskInput from "@energma/input-mask-react";
+### Masked Input Example in React (TypeScript)
+
+This example demonstrates how to use `@energma/input-mask-react` in a React application with TypeScript.
+
+```tsx
+import { MaskedInput, Schema } from "@energma/input-mask-react";
 import { useState } from "react";
 
 function MyComponent() {
-  const [creditCardExpiration, setCreditCardExpiration] = useState("");
+  const [creditCardExpiration, setCreditCardExpiration] = useState<string>("");
+
+  const schema: Schema = {
+    mask: "__/__",
+    symbol: "_",
+    type: "numbers",
+  };
 
   return (
     <MaskedInput
-      schema={{ mask: "__/__", symbol: "_", type: "numbers" }}
+      schema={schema}
       value={creditCardExpiration}
       onChange={(e) => setCreditCardExpiration(e.target.value)}
-      placeholder="__/__"
+      placeholder={schema.mask}
+    />
+  );
+}
+```
+
+### Masked Input Example in Next.js
+
+In Next.js use `"use client"` directive to ensure that component is treated as a client component.<br>
+This example demonstrates how to use `@energma/input-mask-react` in a Next.js client component.
+
+```tsx
+"use client";
+
+import { useState } from "react";
+import { MaskedInput, Schema } from "@energma/input-mask-react";
+
+export default function MyComponent() {
+  const [creditCardExpiration, setCreditCardExpiration] = useState<string>("");
+
+  const schema: Schema = {
+    mask: "__/__",
+    symbol: "_",
+    type: "numbers",
+  };
+
+  return (
+    <MaskedInput
+      schema={schema}
+      value={creditCardExpiration}
+      onChange={(e) => setCreditCardExpiration(e.target.value)}
+      placeholder={schema.mask}
     />
   );
 }
