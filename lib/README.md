@@ -238,4 +238,4 @@ These examples demonstrate the flexibility of the `MaskedInput` component and ho
 
 ## License
 
-`@energma/input-mask-react` is released under the MIT license. See [LICENSE](./LICENSE) for details.
+`@energma/input-mask-react` is released under the MIT license. See [LICENSE](https://github.com/Energma/input-mask-react/blob/main/lib/LICENSE) for details.
