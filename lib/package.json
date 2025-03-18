@@ -1,8 +1,20 @@
 {
   "name": "@energma/input-mask-react",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "type": "module",
   "license": "MIT",
+  "description": "A React component for input mask with dynamic formatting. No dependencies.",
+  "keywords": [ 
+    "react", 
+    "nextjs",
+    "input", 
+    "mask", 
+    "react-mask", 
+    "react-input-mask", 
+    "input-mask-react",
+    "react-component", 
+    "text-field" 
+  ],
   "scripts": {
     "test": "vitest",
     "test-watch": "vitest --watch",
