@@ -1,6 +1,6 @@
 {
   "name": "@energma/input-mask-react",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "type": "module",
   "license": "MIT",
   "description": "A React component for input mask with dynamic formatting. No dependencies.",
